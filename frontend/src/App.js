@@ -1,41 +1,30 @@
-import React, { useState } from "react";
-import axios from "axios";
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import UploadFile from "./components/UploadFile";
+import Layout from "./components/Layout";
+import "./style.css";
+//import "./checando.css";
+import "./botoes.css";
+import VisualizarPlanilhas from "./components/VisualizarPlanilhas";
+import Menu from "./components/Menu"; // <- Adicionando o import do Menu.jsx
+
+
 
 function App() {
-  const [file, setFile] = useState(null);
-
-  const handleFileChange = (event) => {
-    setFile(event.target.files[0]);
-  };
-
-  const handleUpload = async () => {
-    if (!file) {
-      alert("Selecione um arquivo primeiro!");
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append("file", file);
-
-    try {
-      const response = await axios.post("http://127.0.0.1:5000/upload", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-      alert(response.data.message);
-    } catch (error) {
-      console.error("Erro no upload:", error);
-      alert("Erro ao enviar o arquivo.");
-    }
-  };
-
   return (
-    <div style={{ textAlign: "center", padding: "50px" }}>
-      <h1>Upload de Arquivos</h1>
-      <input type="file" onChange={handleFileChange} />
-      <button onClick={handleUpload} style={{ marginLeft: "10px" }}>
-        Enviar
-      </button>
-    </div>
+    <Router>
+      <Layout>
+        <Routes>
+          <Route path="/" element={<Menu />} />
+          <Route path="/upload" element={<UploadFile />} />
+          <Route path="/checklist1" element={<h1>Checklist 1</h1>} />
+          <Route path="/checklist2" element={<h1>Checklist 2</h1>} />
+          <Route path="/checklist3" element={<h1>Checklist 3</h1>} />
+          <Route path="/checklist4" element={<h1>Checklist 4</h1>} />
+          <Route path="/visualizar" element={<VisualizarPlanilhas />} />
+        </Routes>
+      </Layout>
+    </Router>
   );
 }
 

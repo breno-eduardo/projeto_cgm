@@ -1,0 +1,305 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+    display: flex;
+    height: 100vh;
+    background-color: #f4f4f4;
+}
+
+/* ----------------------------- Sidebar ----------------------------------- */
+.sidebar {
+    width: 250px;
+    background: #004a80;
+    color: white;
+    padding: 20px;
+    position: fixed;
+    height: 100%;
+    text-align: center;
+}
+
+.logo {
+    width: 80%;
+    margin-bottom: 15px;
+    border-radius: 10px;
+}
+
+.sidebar h2 {
+    margin-bottom: 20px;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar ul li {
+    padding: 15px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background 0.3s;
+}
+
+.sidebar ul li:hover {
+    background: #0463a7;
+}
+
+.sidebar ul li a {
+    text-decoration: none;
+    color: white;
+    display: block;
+}
+
+/* ----------------------------- Conteúdo ----------------------------------- */
+.content {
+    margin-left: 250px; /* Mantém espaço para a sidebar */
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centraliza horizontalmente */
+    justify-content: center; /* Centraliza verticalmente */
+    min-height: 100vh; /* Mantém a altura da tela */
+    text-align: center;
+}
+
+/* ------------------- Formulário Centralizado ------------------- */
+.upload-form {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 50%;
+    max-width: 500px;
+    margin-top: 20px;
+}
+
+/* ------------------- Lista de Arquivos ------------------- */
+.file-list {
+    list-style: none;
+    padding: 0;
+    width: 100%;
+    max-width: 600px;
+}
+
+.file-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #ffffff;
+    padding: 12px;
+    margin: 10px 0;
+    border-radius: 5px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.file-item span {
+    flex: 1;
+    text-align: left;
+    font-weight: bold;
+}
+
+/* ------------------- Botões lado a lado ------------------- */
+.button-group {
+    display: flex;
+    gap: 10px; /* Espaço entre os botões */
+}
+
+.btn-visualizar, .btn-excluir {
+    margin-left: 10px ;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.btn-visualizar {
+    background: #28a745;
+}
+
+.btn-visualizar:hover {
+    background: #218838;
+}
+
+.btn-excluir {
+    background: #dc3545;
+}
+
+.btn-excluir:hover {
+    background: #c82333;
+}
+
+/* ------------------- Tabela Estilizada ------------------- */
+.excel-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.excel-table td, .excel-table th {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.excel-table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.excel-table th {
+    background-color: #007bff;
+    color: white;
+}
+
+/* Container do Upload */
+.upload-container {
+    display: flex;
+    justify-content: center; /* Centraliza horizontalmente */
+    align-items: center;
+    gap: 10px; /* Espaço entre os botões */
+    margin-top: 30px;
+    flex-wrap: wrap; /* Garante alinhamento mesmo em telas menores */
+}
+
+/* Esconde o input de arquivo */
+#file-upload {
+    display: none;
+}
+
+/* Botões alinhados corretamente */
+.upload-label,
+.upload-btn {
+    width: 220px; /* Mesmo tamanho */
+    height: 45px; /* Mesmo tamanho */
+    padding: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: none;
+}
+.upload-btn {
+    margin-top: -5px;
+}
+
+/* Botão "Escolher Arquivo" */
+.upload-label {
+    background: #007bff;
+    color: white;
+}
+
+.upload-label:hover {
+    background: #0056b3;
+}
+
+/* Botão "Enviar" */
+.upload-btn {
+    background: #28a745;
+    color: white;
+    border: none;
+}
+
+.upload-btn:hover {
+    background: #218838;
+}
+
+.menu-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centraliza horizontalmente */
+    justify-content: center; /* Centraliza verticalmente */
+    height: 100vh; /* Garante que ocupe toda a tela */
+    text-align: center;
+    margin-left: 250px; /* Compensa a sidebar */
+}
+
+/* 🔥 Ajusta a imagem da logo */
+.menu-logo {
+    width: 150px; /* Ajuste conforme necessário */
+    margin-bottom: 20px; /* Espaço entre a imagem e o título */
+}
+
+/* Botão "Processar" */
+/* Botão "Processar" menor */
+/* Botão "Processar" menor e alinhado à direita */
+.button-group {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px; /* Espaço entre os botões */
+}
+
+.btn-processar, .btn-visualizar, .btn-download, .btn-excluir {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+    transition: background 0.3s;
+    font-size: 14px;
+}
+
+.btn-processar {
+    background: #007bff;
+}
+.btn-processar:hover {
+    background: #0056b3;
+}
+
+.btn-visualizar {
+    background: #28a745;
+}
+.btn-visualizar:hover {
+    background: #218838;
+}
+
+.btn-download {
+    background: #17a2b8;
+}
+.btn-download:hover {
+    background: #138496;
+}
+
+.btn-excluir {
+    background: #dc3545;
+}
+.btn-excluir:hover {
+    background: #c82333;
+}
+
+
+
+
+/* ------------------- Responsividade ------------------- */
+@media (max-width: 768px) {
+    .content {
+        margin-left: 250px; /* Sidebar continua fixa */
+        padding: 20px;
+    }
+
+    .upload-form {
+        width: 80%;
+    }
+
+    .file-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .button-group {
+        margin-top: 10px;
+        width: 100%;
+        justify-content: space-between;
+    }
+}
