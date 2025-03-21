@@ -9,7 +9,7 @@ const Layout = ({ children }) => {
     <div className="container">
       {/* Sidebar */}
       <div className="sidebar">
-        <img src="./img/logo.png" alt="Logo" className="logo" />
+        <img src="/logo.png" alt="Logo" className="logo" />
         <ul>
           <li><h2><Link to="/">Menu</Link></h2></li>
           <li><Link to="/upload">Carregar Arquivos</Link></li>

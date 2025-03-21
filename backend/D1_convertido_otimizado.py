@@ -479,62 +479,95 @@ def btnSelecionarMSCs_Click_from_csv():
         ws_d1.range(f"D{i}").value = ""
         ws_d1.range(f"E{i}").value = ""
 
-    # Carregar dados da API a partir do CSV
-    csv_file = os.path.join(os.getcwd(), f"Siconfi_{ano_val}_output.csv")
-    if not os.path.exists(csv_file):
-        print("Arquivo CSV Siconfi não encontrado:", csv_file)
-        return
-    df = pd.read_csv(csv_file, encoding="utf-8")
-    
-    # Validações com dados da API
-    validate_api_items(df, ws_d1, warnings_list)
-    
-    # Validações que envolvem arquivos MSC (e PCASP)
-    validate_msc_files(ws_d1, warnings_list, caminhoRels)
-    
-    ws_d1.activate()
-    print("Validações D1 (00001 a 00025) concluídas com sucesso.")
-    print("Warnings coletados:")
-    for item in warnings_list:
-        print(f"Item {item[0]}: {item[1]}")
+def inserir_observacoes(ws_d1, warnings_list):
+    """Insere os warnings na coluna 'Observações' (E18 até E50)"""
 
-# =============================================================================
-# Execução principal (standalone para testes – adapte se usar via xlwings)
-# =============================================================================
+    col_observacoes = "E"  # Sempre na coluna E
+    linha_inicio = 18  # Primeira linha útil (E18)
+    linha_fim = 50  # Última linha permitida (E50)
+
+    if not warnings_list:
+        print("✅ Nenhuma observação a ser inserida.")
+        return
+
+    for i, (linha, mensagem) in enumerate(warnings_list):
+        linha_destino = linha_inicio + i  # Começa na E18
+        
+        if linha_destino > linha_fim:
+            print(f"⚠️ Aviso: Limite de {linha_fim - linha_inicio + 1} observações atingido. Ignorando extras.")
+            break  # Para de inserir caso ultrapasse E50
+
+        celula = f"{col_observacoes}{linha_destino}"
+        ws_d1.range(celula).value = mensagem
+        print(f"📝 Inserindo '{mensagem}' em {celula}")  # Debug
+
+    print(f"✅ {min(len(warnings_list), linha_fim - linha_inicio + 1)} observações inseridas com sucesso.")
+
+
 def btnSelecionarMSCs_Click_from_csv():
-    print("Executando btnSelecionarMSCs_Click_from_csv()...")  # Debug
+    """Simulação da validação do D1 e preenchimento de observações"""
+    print("🚀 Executando btnSelecionarMSCs_Click_from_csv()...")  # Debug
     # Adicione aqui a lógica do seu processamento
 
+def processar_arquivo(caminho_arquivo, arquivo_saida, ano_val, caminhoRels):
+    """Processa o arquivo Excel e insere as observações"""
+    print(f"Abrindo arquivo: {caminho_arquivo}")
+    app = xw.App(visible=False)
+    try:
+        wb = app.books.open(caminho_arquivo)
+        ws_d1 = wb.sheets["Checklist D1"]
+        
+        csv_file = os.path.join(os.getcwd(), f"Siconfi_{ano_val}_output.csv")
+        
+        if not os.path.exists(csv_file):
+            print(f"⚠️ Arquivo CSV Siconfi não encontrado: {csv_file}")
+        else:
+            try:
+                df = pd.read_csv(csv_file, encoding="utf-8", low_memory=False)
+                warnings_list = []
+                
+                validate_api_items(df, ws_d1, warnings_list)
+                validate_msc_files(ws_d1, warnings_list, caminhoRels)
 
+                if warnings_list:
+                    print(f"🔍 Inserindo {len(warnings_list)} observações na planilha...")
+                    inserir_observacoes(ws_d1, warnings_list)
+                else:
+                    print("✅ Nenhuma observação a ser inserida.")
+                
+                ws_d1.activate()
+                print("✅ Validações D1 (00001 a 00025) concluídas com sucesso.")
+                
+                if warnings_list:
+                    print("⚠️ Warnings coletados:")
+                    for linha, mensagem in warnings_list:
+                        print(f"🔹 Linha {linha}: {mensagem}")
+                else:
+                    print("✅ Nenhum problema encontrado.")
+            
+            except Exception as e:
+                print(f"❌ Erro ao processar a validação do CSV: {str(e)}")
+
+        if caminho_arquivo.endswith(".xlsm"):
+            arquivo_saida = arquivo_saida.replace(".xlsx", ".xlsm")
+        wb.save(arquivo_saida)
+        print(f"Arquivo processado e salvo como: {arquivo_saida}")
+    finally:
+        wb.close()
+        app.quit()
 
 if __name__ == "__main__":
-    if len(sys.argv) < 2:
-        print("Uso: python D1_convertido_otimizado.py <caminho_do_arquivo>")
+    if len(sys.argv) < 4:
+        print("Uso: python D1_convertido_otimizado.py <arquivo_entrada> <arquivo_saida> <ano_val>")
         sys.exit(1)
 
     caminho_arquivo = sys.argv[1]
+    arquivo_saida = sys.argv[2]
+    ano_val = sys.argv[3]
+    caminhoRels = "caminho_para_arquivos_MSC"  # Defina conforme necessário
     
-    # Obtém o caminho absoluto
-    caminho_completo = os.path.abspath(caminho_arquivo)
+    if not (caminho_arquivo.endswith(".xlsx") or caminho_arquivo.endswith(".xlsm")):
+        print("Erro: O arquivo precisa ser .xlsx ou .xlsm")
+        sys.exit(1)
     
-    print(f"Abrindo arquivo: {caminho_completo}")  # Debug
-
-    # Abrindo a planilha corretamente
-    wb = xw.Book(caminho_completo)
-
-    # Chamando a função principal
-    btnSelecionarMSCs_Click_from_csv()
-
-    # Fechando o arquivo após a execução
-    wb.close()
-
-# Criar a pasta de processados, se não existir
-processados_folder = "uploads/processados"
-os.makedirs(processados_folder, exist_ok=True)
-
-# Caminho onde o arquivo processado será salvo
-output_file = os.path.join(processados_folder, "arquivo_processado.xlsx")
-
-# Salvar o arquivo processado no local correto
-wb.save(output_file)
-print(f"Arquivo processado salvo em: {output_file}")
+    processar_arquivo(caminho_arquivo, arquivo_saida, ano_val, caminhoRels)
